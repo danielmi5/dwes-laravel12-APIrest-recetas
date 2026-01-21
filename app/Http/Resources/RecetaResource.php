@@ -4,6 +4,8 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\IngredienteResource;
+use App\Http\Resources\ComentarioResource;
 
 /**
  * Class RecetaResource
@@ -16,7 +18,7 @@ class RecetaResource extends JsonResource
 {
     
     /**
-     * Transform the resource into an array.
+     * Convierte el recurso en un array.
      *
      * @param \Illuminate\Http\Request $request
      * @return array<string, mixed>
@@ -31,6 +33,9 @@ class RecetaResource extends JsonResource
             'publicada' => $this->publicada,
             'user_id' => $this->user_id,
             'created_at' => $this->created_at,
+            'ingredientes' => IngredienteResource::collection($this->whenLoaded('ingredientes')),
+            'likes_count' => $this->when(isset($this->likes_count), $this->likes_count),
+            'comentarios' => ComentarioResource::collection($this->whenLoaded('comentarios')),
         ];
     }
 }
