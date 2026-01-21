@@ -10,9 +10,22 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 use App\Http\Controllers\Api\RecetaController;
+use App\Http\Controllers\Api\IngredienteController;
+use App\Http\Controllers\Api\LikeController;
+use App\Http\Controllers\Api\ComentarioController;
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('recetas', RecetaController::class);
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/recetas/{receta}/ingredientes', [IngredienteController::class, 'store']);
+    Route::delete('/ingredientes/{ingrediente}', [IngredienteController::class, 'destroy']);
+
+    Route::post('/recetas/{receta}/like', [LikeController::class, 'toggle']);
+
+    Route::post('/recetas/{receta}/comentarios', [ComentarioController::class, 'store']);
+    Route::delete('/comentarios/{comentario}', [ComentarioController::class, 'destroy']);
 });
 
 Route::get('/ping', fn () => response()->json(['pong' => true]));
