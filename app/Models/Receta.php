@@ -50,4 +50,35 @@ class Receta extends Model
     {
         return $this->belongsTo(\App\Models\User::class);
     }
+
+    /**
+     * Relación: una receta tiene muchos ingredientes.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function ingredientes()
+    {
+        return $this->hasMany(\App\Models\Ingrediente::class);
+    }
+
+    /**
+     * Relación: una receta tiene muchos comentarios.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function comentarios()
+    {
+        return $this->hasMany(\App\Models\Comentario::class);
+    }
+
+    /**
+     * Relación: usuarios que han dado like a la receta.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function likes()
+    {
+        return $this->belongsToMany(\App\Models\User::class, 'likes')
+            ->withTimestamps();
+    }
 }
