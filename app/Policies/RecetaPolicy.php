@@ -17,7 +17,7 @@ class RecetaPolicy
 {
     
     /**
-     * Determine whether the user can view any models.
+     * Determina si el usuario puede ver cualquier modelo.
      *
      * @param \App\Models\User $user
      * @return bool
@@ -28,10 +28,10 @@ class RecetaPolicy
     }
 
     /**
-     * Determine whether the user can view the model.
+     * Determina si el usuario puede ver el modelo.
      */
     /**
-     * Determine whether the user can view the model.
+     * Determina si el usuario puede ver el modelo.
      *
      * @param \App\Models\User $user
      * @param \App\Models\Receta $receta
@@ -43,10 +43,10 @@ class RecetaPolicy
     }
 
     /**
-     * Determine whether the user can create models.
+     * Determina si el usuario puede crear modelos.
      */
     /**
-     * Determine whether the user can create models.
+     * Determina si el usuario puede crear modelos.
      *
      * @param \App\Models\User $user
      * @return bool
@@ -57,10 +57,10 @@ class RecetaPolicy
     }
 
     /**
-     * Determine whether the user can update the model.
+     * Determina si el usuario puede actualizar el modelo.
      */
     /**
-     * Determine whether the user can update the model.
+     * Determina si el usuario puede actualizar el modelo.
      *
      * @param \App\Models\User $user
      * @param \App\Models\Receta $receta
@@ -76,10 +76,23 @@ class RecetaPolicy
     }
 
     /**
-     * Determine whether the user can delete the model.
+     * Determina si el usuario puede gestionar los ingredientes de la receta.
+     * Alias de update (propietario o admin).
+     *
+     * @param \App\Models\User $user
+     * @param \App\Models\Receta $receta
+     * @return bool
+     */
+    public function manageIngredients(User $user, Receta $receta): bool
+    {
+        return $this->update($user, $receta);
+    }
+
+    /**
+     * Determina si el usuario puede eliminar el modelo.
      */
     /**
-     * Determine whether the user can delete the model.
+     * Determina si el usuario puede eliminar el modelo.
      *
      * @param \App\Models\User $user
      * @param \App\Models\Receta $receta
@@ -95,10 +108,10 @@ class RecetaPolicy
     }
 
     /**
-     * Determine whether the user can restore the model.
+     * Determina si el usuario puede restaurar el modelo.
      */
     /**
-     * Determine whether the user can restore the model.
+     * Determina si el usuario puede restaurar el modelo.
      *
      * @param \App\Models\User $user
      * @param \App\Models\Receta $receta
@@ -110,10 +123,10 @@ class RecetaPolicy
     }
 
     /**
-     * Determine whether the user can permanently delete the model.
+     * Determina si el usuario puede eliminar permanentemente el modelo.
      */
     /**
-     * Determine whether the user can permanently delete the model.
+     * Determina si el usuario puede eliminar permanentemente el modelo.
      *
      * @param \App\Models\User $user
      * @param \App\Models\Receta $receta
