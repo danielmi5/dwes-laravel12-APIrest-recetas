@@ -22,6 +22,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/recetas/{receta}/ingredientes', [IngredienteController::class, 'store']);
     Route::delete('/ingredientes/{ingrediente}', [IngredienteController::class, 'destroy']);
 
+    Route::post('/recetas/{receta}/imagen', [\App\Http\Controllers\Api\RecetaController::class, 'uploadImage']);
+
     Route::post('/recetas/{receta}/like', [LikeController::class, 'toggle']);
 
     Route::post('/recetas/{receta}/comentarios', [ComentarioController::class, 'store']);

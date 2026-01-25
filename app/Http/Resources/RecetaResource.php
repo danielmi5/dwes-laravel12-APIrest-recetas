@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\IngredienteResource;
 use App\Http\Resources\ComentarioResource;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Class RecetaResource
@@ -36,6 +37,7 @@ class RecetaResource extends JsonResource
             'ingredientes' => IngredienteResource::collection($this->whenLoaded('ingredientes')),
             'likes_count' => $this->when(isset($this->likes_count), $this->likes_count),
             'comentarios' => ComentarioResource::collection($this->whenLoaded('comentarios')),
+            'imagen_url' => $this->when($this->imagen, Storage::url($this->imagen)),
         ];
     }
 }

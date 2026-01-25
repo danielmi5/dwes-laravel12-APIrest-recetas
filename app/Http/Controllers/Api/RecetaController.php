@@ -7,6 +7,7 @@ use App\Models\Receta;
 use Illuminate\Http\Request;
 use App\Services\RecetaService;
 use App\Http\Resources\RecetaResource;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Class RecetaController
@@ -27,7 +28,7 @@ class RecetaController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Receta::query();
+        $query = Receta::withCount('likes');
 
         // Búsqueda
         if ($search = $request->query('q')) {
@@ -38,7 +39,7 @@ class RecetaController extends Controller
         } //PostgreSQL ✔ (ILIKE)
 
         // Ordenación
-        $allowedSorts = ['titulo', 'created_at'];
+        $allowedSorts = ['titulo', 'created_at', 'likes_count'];
         if ($sort = $request->query('sort')) {
             $direction = str_starts_with($sort, '-') ? 'desc' : 'asc';
             $field = ltrim($sort, '-');
@@ -46,6 +47,18 @@ class RecetaController extends Controller
             if (in_array($field, $allowedSorts)) {
                 $query->orderBy($field, $direction);
             }
+        }
+
+        // Filtrado por número mínimo de likes
+        if ($minLikes = $request->query('min_likes')) {
+            $query->having('likes_count', '>=', (int) $minLikes);
+        }
+
+        // Filtrado por ingrediente
+        if ($ingredient = $request->query('ingredient')) {
+            $query->whereHas('ingredientes', function ($q) use ($ingredient) {
+                $q->where('nombre', 'ILIKE', "%{$ingredient}%");
+            });
         }
 
         // Paginación
@@ -127,6 +140,40 @@ class RecetaController extends Controller
         return response()->json($receta);
     }
 
+    /**
+     * Sube o actualiza la imagen asociada a la receta.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\Receta $receta
+     * @param \App\Services\RecetaService $recetaService
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function uploadImage(Request $request, Receta $receta, RecetaService $recetaService)
+    {
+        $this->authorize('update', $receta);
+
+        $recetaService->assertCanBeModified($receta);
+
+        $data = $request->validate([
+            // Se acepta JPEG, PNG and WebP (máximo 5MB)
+            'imagen' => 'required|image|mimes:jpeg,png,webp|max:5120', // max 5MB
+        ]);
+
+        $file = $request->file('imagen');
+
+        // Guarda en disco 'public' dentro de carpeta recetas
+        $path = $file->store('recetas', 'public');
+
+        // Si existe imagen previa, eliminarla
+        if ($receta->imagen) {
+            Storage::disk('public')->delete($receta->imagen);
+        }
+
+        $receta->imagen = $path;
+        $receta->save();
+
+        return response()->json(new RecetaResource($receta->fresh()->load('ingredientes','comentarios')) , 200);
+    }
 
     // Elimina una receta
     /**
