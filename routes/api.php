@@ -19,7 +19,9 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/recetas/{receta}/ingredientes', [IngredienteController::class, 'index']);
     Route::post('/recetas/{receta}/ingredientes', [IngredienteController::class, 'store']);
+    Route::put('/ingredientes/{ingrediente}', [IngredienteController::class, 'update']);
     Route::delete('/ingredientes/{ingrediente}', [IngredienteController::class, 'destroy']);
 
     Route::post('/recetas/{receta}/imagen', [\App\Http\Controllers\Api\RecetaController::class, 'uploadImage']);

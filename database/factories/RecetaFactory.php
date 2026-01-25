@@ -8,12 +8,11 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Receta>
+ */
 /**
  * Class RecetaFactory
  *
  * Factory que genera instancias de `Receta` en tests y seeders.
- *
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Receta>
  */
 class RecetaFactory extends Factory
 {
@@ -24,9 +23,7 @@ class RecetaFactory extends Factory
      * @var string
      */
     protected $model = Receta::class;
-     *
-     * @return array<string, mixed>
-     */
+
     /**
      * Definición por defecto de la fábrica.
      *
